@@ -2,7 +2,7 @@
 FROM golang:latest as builder
 WORKDIR /app
 COPY . .
-RUN go build -o main .
+RUN go build -o main ./backend/cmd/server
 
 # Final stage
 FROM alpine:latest

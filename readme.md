@@ -274,7 +274,7 @@ When using htmx, keep the data binding logic simple. This will make it easier to
 Initial Project Structure
 go
 Copy code
-task-manager/
+mr-task-manager/
 ├── backend/
 │   ├── cmd/
 │   │   └── server/
