@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>MR Task Manager</title>
+    <script src="https://unpkg.com/htmx.org"></script>
+</head>
+<body>
+    <h1>Task Manager</h1>
+    <div id="task-list" hx-get="/tasks" hx-trigger="load">
+        Loading tasks...
+    </div>
+    <button hx-get="/new-task-form">Add Task</button>
+</body>
+</html>
