@@ -5,19 +5,19 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      - db
+      - database
     environment:
-      - DB_HOST=db
+      - DB_HOST=localhost
       - DB_PORT=5432
       - DB_USER=postgres
-      - DB_PASSWORD=yourpassword
-      - DB_NAME=tasks
-  db:
+      - DB_PASSWORD=E>o4NkPt~wZCv3D#!<2z=p*~v
+      - DB_NAME=mr-task-management-db
+  database:
     image: postgres
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: yourpassword
-      POSTGRES_DB: tasks
+      POSTGRES_PASSWORD: E>o4NkPt~wZCv3D#!<2z=p*~v
+      POSTGRES_DB: mr-task-management-db
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
