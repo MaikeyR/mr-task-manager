@@ -2,6 +2,7 @@ package repositories
 
 import (
 	"database/sql"
+	"log"
 	"mr-task-manager/backend/internal/models"
 	"time"
 )
@@ -14,34 +15,9 @@ func NewTaskRepository(database *sql.DB) *TaskRepository {
 	return &TaskRepository{database: database}
 }
 
-func (repository *TaskRepository) CreateTask(task *models.Task) error {
-	query := `INSERT INTO tasks (name, completed, created_at, updated_at) VALUES ($1, $2, $3, $4) RETURNING id`
-	now := time.Now()
-	err := repository.database.QueryRow(query, task.Name, task.Completed, now, now).Scan(&task.ID)
-	if err != nil {
-		return err
-	}
-	task.CreatedAt = now
-	task.UpdatedAt = now
-	return nil
-}
-
-func (repository *TaskRepository) GetTaskByID(id int) (*models.Task, error) {
-	query := `SELECT id, name, completed, created_at, updated_at FROM tasks WHERE id = $1`
-	row := repository.database.QueryRow(query, id)
-
-	task := &models.Task{}
-	err := row.Scan(&task.ID, &task.Name, &task.Completed, &task.CreatedAt, &task.UpdatedAt)
-	if err != nil {
-		if err == sql.ErrNoRows {
-			return nil, nil
-		}
-		return nil, err
-	}
-	return task, nil
-}
-
 func (repository *TaskRepository) GetAllTasks() ([]*models.Task, error) {
+	log.Println("GetAllTasks")
+
 	query := `SELECT id, name, completed, created_at, updated_at FROM tasks`
 	rows, err := repository.database.Query(query)
 	if err != nil {
@@ -61,7 +37,40 @@ func (repository *TaskRepository) GetAllTasks() ([]*models.Task, error) {
 	return tasks, nil
 }
 
+func (repository *TaskRepository) CreateTask(task *models.Task) error {
+	log.Println("CreateTask")
+
+	query := `INSERT INTO tasks (name, completed, created_at, updated_at) VALUES ($1, $2, $3, $4) RETURNING id`
+	now := time.Now()
+	err := repository.database.QueryRow(query, task.Name, task.Completed, now, now).Scan(&task.ID)
+	if err != nil {
+		return err
+	}
+	task.CreatedAt = now
+	task.UpdatedAt = now
+	return nil
+}
+
+func (repository *TaskRepository) GetTaskByID(id int) (*models.Task, error) {
+	log.Println("GetTaskByID")
+
+	query := `SELECT id, name, completed, created_at, updated_at FROM tasks WHERE id = $1`
+	row := repository.database.QueryRow(query, id)
+
+	task := &models.Task{}
+	err := row.Scan(&task.ID, &task.Name, &task.Completed, &task.CreatedAt, &task.UpdatedAt)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, nil
+		}
+		return nil, err
+	}
+	return task, nil
+}
+
 func (repository *TaskRepository) UpdateTask(task *models.Task) error {
+	log.Println("UpdateTask")
+
 	query := `UPDATE tasks SET name = $1, completed = $2, updated_at = $3 WHERE id = $4`
 	now := time.Now()
 	_, err := repository.database.Exec(query, task.Name, task.Completed, now, task.ID)
@@ -73,6 +82,8 @@ func (repository *TaskRepository) UpdateTask(task *models.Task) error {
 }
 
 func (repository *TaskRepository) DeleteTask(id int) error {
+	log.Println("DeleteTask")
+
 	query := `DELETE FROM tasks WHERE id = $1`
 	_, err := repository.database.Exec(query, id)
 	return err
